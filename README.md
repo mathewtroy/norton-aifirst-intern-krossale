@@ -184,6 +184,14 @@ Test results are in:
 app/build/reports/tests/testDebugUnitTest/index.html
 ```
 
+**Download pre-built APK (debug):**
+
+A ready-to-install debug APK is available on Google Drive — no build required.
+
+[Download APK](https://drive.google.com/drive/u/0/folders/1cZYy4nSpVq3W5OvJktn5uWZI0L-kdLQ7)
+
+> Enable **Install unknown apps** on your Android device before installing.
+
 ---
 
 ## 8. Screenshots
