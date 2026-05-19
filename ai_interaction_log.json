@@ -1,0 +1,259 @@
+{
+  "project": "AntiScam — Gen Digital AI-First Internship Assignment, Option B",
+  "author": "Aleksandr Kross <krossale@fel.cvut.cz>",
+  "repository": "https://github.com/mathewtroy/norton-aifirst-intern-krossale",
+  "session_date": "2026-05-18",
+  "ai_model": "Claude Sonnet 4.6 (claude-sonnet-4-6)",
+  "total_tests_passing": 22,
+
+  "interactions": [
+
+    {
+      "id": 1,
+      "phase": "Project Scaffolding",
+      "prompt_summary": "Set up a minimal Android Jetpack Compose skeleton for a scam message detector. MVVM, package com.krossale.antiscam, AGP 8.5.2, Kotlin 2.0.21, Compose BOM 2024.12.01. Create all Gradle files, AndroidManifest, and MVVM layer stubs.",
+      "ai_output": [
+        "settings.gradle.kts, build.gradle.kts (root + app)",
+        "gradle/libs.versions.toml (version catalog)",
+        "gradle/wrapper/gradle-wrapper.properties",
+        "AndroidManifest.xml",
+        "Kotlin stubs: RiskLevel, ScamAnalysisResult, ScamAnalyzer, ScamDetectorUiState, ScamDetectorViewModel, ScamDetectorScreen, MainActivity"
+      ],
+      "developer_changes": "None — accepted as-is. AGP 8.5.2 + Gradle 8.7 pairing already validated.",
+      "outcome": "Full buildable project skeleton in place"
+    },
+
+    {
+      "id": 2,
+      "phase": "Heuristic Analysis Engine",
+      "prompt_summary": "Implement ScamAnalyzer.kt with local keyword and regex-based heuristic analysis. Classify as Safe/Suspicious/Dangerous. Include dangerous keywords (password, bank account, gift card, bitcoin...), suspicious keywords (click here, act now, limited time...), and URL pattern detection (IP-based URLs, shortened URLs, suspicious TLDs). Return confidence 0–100 and plain-language explanation.",
+      "ai_output": [
+        "dangerousKeywords list (15 terms)",
+        "suspiciousKeywords list (13 terms)",
+        "suspiciousUrlPatterns: IP regex, shortener regex (bit.ly/tinyurl/goo.gl/t.co), TLD regex (.xyz/.top/.click/.link)",
+        "analyze() scoring: dangerous = min(97, 70 + hits*8 + urlCount*6); suspicious = min(85, 50 + hits*6 + urlCount*12)",
+        "buildExplanation() producing natural-language output"
+      ],
+      "developer_changes": [
+        "Capped confidence at 97 (not 100) to imply no heuristic is perfect",
+        "Removed overly broad suspicious keywords ('your account', 'congratulations', 'selected', 'confirm') that caused false positives on safe messages",
+        "Replaced with more specific phrases: 'confirm your account', 'you have been selected', 'unusual sign-in'",
+        "Changed 'limited time' → 'limited time offer' to reduce false positives",
+        "Refactored two private methods buildDangerousExplanation/buildSuspiciousExplanation (incorrectly took List<Regex>) into single buildExplanation(keywords, urlCount, dangerous) taking correct types"
+      ],
+      "outcome": "ScamAnalyzer.kt — production-quality heuristic engine with 7 passing unit tests"
+    },
+
+    {
+      "id": 3,
+      "phase": "Jetpack Compose UI",
+      "prompt_summary": "Create ScamDetectorScreen.kt using Material3. Include: dark navy header card, OutlinedTextField for input, LazyRow of example chips, full-width Analyze button, ResultCard with risk badge + LinearProgressIndicator + explanation text. Use theme colors: Navy, Blue, SafeGreen, SuspiciousAmber, DangerousRed.",
+      "ai_output": [
+        "ScamDetectorScreen (StateFlow collector) + ScamDetectorContent (stateless layout)",
+        "AppHeader — dark navy Card with AntiScam branding",
+        "InputSection — OutlinedTextField with placeholder",
+        "ExampleMessagesSection — LazyRow of OutlinedButton chips",
+        "ResultCard — risk badge (Surface + color), LinearProgressIndicator, HorizontalDivider, explanation text, colored BorderStroke",
+        "Color.kt with full palette",
+        "Theme.kt wrapping MaterialTheme with lightColorScheme"
+      ],
+      "developer_changes": [
+        "Rejected deprecated Divider, replaced with HorizontalDivider (Material3 1.3+)",
+        "Updated LinearProgressIndicator to lambda form progress = { score / 100f } (non-deprecated API)",
+        "Removed isAnalyzing: Boolean from UiState — unnecessary since local analysis is synchronous (instant)",
+        "Rejected collectAsStateWithLifecycle suggestion — requires extra dependency, collectAsState() sufficient for this prototype"
+      ],
+      "outcome": "ScamDetectorScreen.kt — clean Material3 Compose UI with all Material3 APIs used correctly"
+    },
+
+    {
+      "id": 4,
+      "phase": "Analysis History / Log Feature",
+      "prompt_summary": "Add an in-memory analysis log that persists across analyses within a session. Show history entries with timestamp, input snippet, risk level, and confidence. Allow the user to hide/show and clear the log.",
+      "ai_output": [
+        "AnalysisLogEntry data class (id, inputSnippet, result)",
+        "ScamDetectorUiState extended with history: List<AnalysisLogEntry>",
+        "onAnalyzeClicked() extended to prepend entry (reverse-chronological order)",
+        "onClearHistory() method on ViewModel",
+        "HistorySection composable with AnimatedVisibility (show/hide toggle) and Clear button",
+        "HistoryEntryRow with colored risk dot, snippet text, 'Safe · 93% · 14:32:01' subtitle"
+      ],
+      "developer_changes": "Kept it in-memory (no Room persistence) — matches assignment scope and keeps code simple to explain in demo video.",
+      "outcome": "Full session-scoped analysis log, visually integrated into UI"
+    },
+
+    {
+      "id": 5,
+      "phase": "Unit Test Generation",
+      "prompt_summary": "Generate unit tests for ScamAnalyzer and ScamDetectorViewModel covering: safe → Safe, phishing → Dangerous, suspicious phrase → Suspicious, empty → Safe+50, multi-keyword confidence range, example selection, blank analyze does nothing, analyze produces result, input change clears result.",
+      "ai_output": [
+        "ScamAnalyzerTest.kt — 5 AI-generated tests",
+        "ScamDetectorViewModelTest.kt — 8 AI-generated tests"
+      ],
+      "developer_changes": [
+        "Added 2 tests to ScamAnalyzerTest: 'safe message has non-empty explanation', 'prize scam with bit.ly URL → Dangerous'",
+        "Added 2 tests to ScamDetectorViewModelTest: 'multiple analyses build history in reverse order', 'clear history empties the log'",
+        "Marked all AI-generated tests with comment: // AI-generated test — reviewed and refined by developer"
+      ],
+      "outcome": "17 passing unit tests total. ./gradlew test → BUILD SUCCESSFUL in 6s"
+    },
+
+    {
+      "id": 6,
+      "phase": "SVG to VectorDrawable Conversion",
+      "prompt_summary": "Convert anti.svg to Android VectorDrawable XML. SVG has drop-shadow filter (unsupported), dark rounded rect background (rx=10), and a shield/antenna path. Produce arc-based path data for rounded rect and preserve original logo path.",
+      "ai_output": [
+        "anti_logo.xml VectorDrawable",
+        "Rounded rect as arc path: M14,0 H42 A10,10 0 0 1 52,10 V38 A10,10 0 0 1 42,48 H14 A10,10 0 0 1 4,38 V10 A10,10 0 0 1 14,0 Z",
+        "Logo path fill=#3266AA stroke=#E2DDD0",
+        "ic_launcher_foreground.xml and ic_launcher_background.xml for adaptive icon",
+        "mipmap-anydpi-v26/ launcher XMLs"
+      ],
+      "developer_changes": [
+        "Drop-shadow filter correctly identified as unsupported — removed",
+        "Manually verified arc path coordinates against original SVG geometry",
+        "Moved anti.svg to app/src/main/assets/ (Android rejects .svg in res/drawable/)"
+      ],
+      "outcome": "Custom adaptive launcher icon displayed correctly on device"
+    },
+
+    {
+      "id": 7,
+      "phase": "Build & Environment Troubleshooting",
+      "prompt_summary": "Fix build errors: Java 25 incompatibility with Gradle 8.7, missing gradle-wrapper.jar, compileSdk mismatch.",
+      "errors_encountered": [
+        {
+          "error": "Unsupported class file major version 69",
+          "cause": "System default JDK was Java 25; Gradle 8.7 supports max Java 21",
+          "fix": "Created ~/.gradle/gradle.properties with org.gradle.java.home=/usr/lib/jvm/java-21-openjdk-amd64; changed Android Studio Gradle JVM to embedded JBR-21"
+        },
+        {
+          "error": "compileSdk 35 not found",
+          "cause": "Only android-36 SDK installed on this machine",
+          "fix": "Changed compileSdk and targetSdk from 35 to 36 in app/build.gradle.kts"
+        },
+        {
+          "error": "gradle-wrapper.jar missing from repository",
+          "cause": "Binary not committed in original repo",
+          "fix": "Generated using Gradle 8.7 from ~/.gradle/wrapper/dists/ cache: JAVA_HOME=.../java-21 $GRADLE_BIN wrapper --gradle-version=8.7"
+        },
+        {
+          "error": "app/build/ not in .gitignore, staged build artifacts on first commit",
+          "cause": ".gitignore had /build (root only), not app/build",
+          "fix": "Added app/build to .gitignore before first commit"
+        }
+      ],
+      "outcome": "Clean build. App installed on Samsung Galaxy A12 via ./gradlew installDebug"
+    },
+
+    {
+      "id": 9,
+      "phase": "Project Planning & Architecture Design",
+      "prompt_summary": "Initial planning prompt: given an empty repo and the assignment PDF, asked AI to recommend folder/project structure, describe MVVM architecture, define layer responsibilities, list recommended Kotlin classes/files, describe UI→ViewModel→Domain→Result data flow, define test structure, and suggest simplifications suitable for a small internship project.",
+      "ai_output": [
+        "Recommended 3-layer MVVM layout: ui/ (Screen + ViewModel + UiState), domain/ (Analyzer + Result + RiskLevel), data/ (ExampleMessages)",
+        "Described StateFlow-based data flow: user input → ViewModel.onAnalyzeClicked() → ScamAnalyzer.analyze() → ScamAnalysisResult → UiState update → Compose recomposition",
+        "Identified exact Kotlin files needed (7 source files + 2 test files)",
+        "Recommended against Repository/Room/Hilt for internship scope",
+        "Suggested keeping ViewModel analysis synchronous to simplify unit testing (no coroutines needed)"
+      ],
+      "developer_changes": [
+        "Added AnalysisLogEntry.kt and history log feature not mentioned in initial plan",
+        "Kept synchronous analysis as suggested — confirmed correct decision during test phase"
+      ],
+      "outcome": "Clear project blueprint established before writing any code"
+    },
+
+    {
+      "id": 10,
+      "phase": "Scam Email Examples Generation",
+      "prompt_summary": "Generate 5–6 realistic email/SMS examples covering different risk levels (Safe ~10–15%, Suspicious ~35–60%, Dangerous ~75–97%) and scenario types: bank alerts, account verification, prize scams, subscription notifications, credential requests. Each example should include subject, body, expected risk level, estimated confidence, and explanation.",
+      "ai_output": [
+        "Safe example: legitimate StreamView subscription renewal reminder — no urgency, no links, no credential requests",
+        "Suspicious example: account sign-in alert with bit.ly link and 24-hour confirmation window",
+        "Dangerous example: prize winner scam with tinyurl and 15-minute expiry",
+        "Dangerous example: bank security alert requesting account verification with suspicious domain",
+        "Dangerous example: password reset phishing with fake Microsoft branding",
+        "Each example annotated with expected RiskLevel and confidence range"
+      ],
+      "developer_changes": [
+        "Used the Safe and Dangerous examples as the built-in ExampleMessages.kt chips (Bank Alert Scam, Prize Winner Scam, Safe Message)",
+        "Suspicious example used as manual test input during device testing",
+        "Rejected the Microsoft password reset example from ExampleMessages — too long for a chip label"
+      ],
+      "outcome": "3 built-in example messages integrated into the app; additional examples used for manual QA"
+    },
+
+    {
+      "id": 11,
+      "phase": "Project Audit & Gap Analysis",
+      "prompt_summary": "Asked AI to read the assignment PDF, inspect the full project (source, tests, README, screenshots, Git status), check what was completed vs missing, verify all Option B requirements, assess whether newer May 19 screenshots should replace old ones, run tests, estimate rubric score, and provide a prioritized fix checklist.",
+      "ai_output": [
+        "Confirmed all Option B technical requirements satisfied",
+        "Identified missing demo video as the only critical gap",
+        "Flagged old screenshots (May 18) as inferior to newer ones in screen_mobile/ — recommended replacement",
+        "Noted Claude terminal screenshots in screen_promts/ not referenced in README",
+        "Estimated score: ~82/100 without video, ~88–90/100 with video",
+        "Prioritized checklist: (1) record video, (2) update screenshots, (3) add terminal screenshots to README"
+      ],
+      "developer_changes": [
+        "Replaced all README screenshots with May 19 versions showing full explanation text and Analysis Log",
+        "Added Suspicious result screenshot (was missing from README)",
+        "Added Claude terminal screenshots to README section 11 (AI Interaction Log)",
+        "Added ai_interaction_log.json to project root with hyperlink in README"
+      ],
+      "outcome": "README and screenshots fully updated; only demo video remains"
+    },
+
+    {
+      "id": 8,
+      "phase": "AI Code Review",
+      "prompt_summary": "Review generated code for correctness and best practices.",
+      "recommendations_accepted": [
+        "Remove isAnalyzing: Boolean from UiState (synchronous analysis needs no loading state)",
+        "Replace Divider with HorizontalDivider (Material3 deprecation)",
+        "Use lambda form for LinearProgressIndicator progress parameter"
+      ],
+      "recommendations_rejected": [
+        {
+          "recommendation": "Use collectAsStateWithLifecycle instead of collectAsState()",
+          "reason": "Requires lifecycle-runtime-compose dependency; collectAsState() is sufficient for this prototype scope"
+        },
+        {
+          "recommendation": "Use Hilt for dependency injection of ScamAnalyzer",
+          "reason": "Assignment scope does not require DI; simple direct instantiation is easier to explain during demo video"
+        }
+      ],
+      "outcome": "Code reviewed, unnecessary complexity removed"
+    },
+
+    {
+      "id": 12,
+      "phase": "Final Pre-Submission Review",
+      "prompt_summary": "Comprehensive final check before submission: read assignment requirements, inspect full project structure and source code, verify all mandatory requirements, check README quality and consistency, verify screenshots are correct and recent, check for unnecessary files, run tests and build APK, estimate rubric score, produce completed/missing/warnings checklist.",
+      "ai_output": [
+        "All Option B technical requirements confirmed satisfied",
+        "22 unit tests passing (BUILD SUCCESSFUL)",
+        "README sections complete: Overview, Features, Architecture, Structure, Setup, Build, Screenshots, Testing, CI/CD, AI Interaction Log, AI Code Review, Reflection, Demo Video placeholder, Author",
+        "No unnecessary files found in repository",
+        "Estimated score breakdown: AI Tool Usage 26/30, Code Quality 17/20, Testing 18/20, Product Understanding 13/15, Communication 8/15 (video missing) = 82/100",
+        "Single remaining item: demo video recording and link insertion"
+      ],
+      "developer_changes": [
+        "Fixed duplicate section numbering bug in README (two sections numbered 11)",
+        "Renumbered sections 12–14 accordingly",
+        "Added ai_interaction_log.json to project root"
+      ],
+      "outcome": "Project submission-ready pending demo video"
+    }
+
+  ],
+
+  "final_state": {
+    "tests": "22 / 22 passing",
+    "build": "BUILD SUCCESSFUL",
+    "device_test": "Installed and tested on Samsung Galaxy A12",
+    "first_commit": "cbd4c62 on branch feature/add-skeleton",
+    "remaining": "Demo video recording (required by assignment) — YouTube/Loom link to be inserted in README section 14"
+  }
+}

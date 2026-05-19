@@ -273,6 +273,8 @@ Workflow file: `.github/workflows/android-ci.yml`
 
 ## 11. AI Interaction Log
 
+Full machine-readable log: [`ai_interaction_log.json`](ai_interaction_log.json)
+
 ### Prompt 1 — Project scaffolding
 
 **Prompt:**
