@@ -1,5 +1,7 @@
 # AntiScam
 
+![Android CI](https://github.com/mathewtroy/norton-aifirst-intern-krossale/actions/workflows/android-ci.yml/badge.svg)
+
 AI-first Android scam message detector prototype inspired by **Norton Genie** / Gen Digital.
 
 **Assignment Option B — Scam Message Detector**
@@ -208,7 +210,7 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 ## 9. Testing
 
-### ScamAnalyzerTest.kt (7 tests)
+### ScamAnalyzerTest.kt (12 tests)
 - Safe message → Safe risk level
 - Phishing message with `password` + `bank account` → Dangerous
 - `click here` phrasing → Suspicious
@@ -216,6 +218,11 @@ app/build/reports/tests/testDebugUnitTest/index.html
 - Multi-keyword scam → confidence in 70–97 range *(AI-generated, reviewed)*
 - Safe message → non-empty explanation
 - Prize scam with shortened URL → Dangerous
+- Shortened URL + urgency + prize → Dangerous
+- Bank account + urgency combination → Dangerous
+- Normal bank statement message → Safe
+- Mixed-case keywords detected correctly → Dangerous
+- Multiple URLs produce higher confidence than single URL
 
 ### ScamDetectorViewModelTest.kt (10 tests)
 - Initial state: empty input, no result
@@ -235,7 +242,31 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 ---
 
-## 10. AI Interaction Log
+## 10. CI / CD
+
+Added GitHub Actions CI workflow for automatic test execution.
+
+The pipeline runs on every push to `main` / `develop` and on every pull request.
+
+```
+push / PR
+    ↓
+actions/checkout@v4
+    ↓
+actions/setup-java@v4  (Temurin JDK 17)
+    ↓
+gradle/actions/setup-gradle@v3
+    ↓
+./gradlew test
+    ↓
+BUILD SUCCESSFUL
+```
+
+Workflow file: `.github/workflows/android-ci.yml`
+
+---
+
+## 11. AI Interaction Log
 
 ### Prompt 1 — Project scaffolding
 
