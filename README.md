@@ -188,13 +188,18 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 ## 8. Screenshots
 
-### Home Screen
+### Home Screen — Safe Message
 ![Home Screen](screenshots/home_screen.png)
 
 ---
 
-### Analysis Result — Dangerous (Bank Alert Scam)
-![Dangerous Result - Bank](screenshots/result_dangerous_bank.png)
+### Analysis Result — Safe
+![Safe Result](screenshots/result_safe.png)
+
+---
+
+### Analysis Result — Suspicious (Phishing Link)
+![Suspicious Result](screenshots/result_suspicious.png)
 
 ---
 
@@ -203,8 +208,8 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 ---
 
-### Analysis Result — Safe
-![Safe Result](screenshots/result_safe.png)
+### Analysis Result — Dangerous (Bank Alert Scam)
+![Dangerous Result - Bank](screenshots/result_dangerous_bank.png)
 
 ---
 
@@ -323,7 +328,31 @@ Workflow file: `.github/workflows/android-ci.yml`
 
 ---
 
-## 11. AI Code Review Summary
+### AI Workflow — Claude Terminal Screenshots
+
+The screenshots below show actual Claude Code terminal sessions from the development process.
+
+**Session 1 — Initial context and project scaffolding prompt**
+![AI Workflow 01](screenshots/ai_workflow_01.png)
+
+---
+
+**Session 2 — AI generates the full project structure**
+![AI Workflow 02](screenshots/ai_workflow_02.png)
+
+---
+
+**Session 3 — Prompts for ScamAnalyzer, UI, tests, and anti-log**
+![AI Workflow 03](screenshots/ai_workflow_03.png)
+
+---
+
+**Session 4 — README structure and build verification instructions**
+![AI Workflow 04](screenshots/ai_workflow_04.png)
+
+---
+
+## 12. AI Code Review Summary
 
 ### Feedback received
 
@@ -341,7 +370,7 @@ Workflow file: `.github/workflows/android-ci.yml`
 
 ---
 
-## 12. Reflection
+## 13. Reflection
 
 ### What I learned
 
@@ -365,7 +394,7 @@ Workflow file: `.github/workflows/android-ci.yml`
 
 ---
 
-## 13. Demo Video
+## 14. Demo Video
 
 [Insert YouTube / Loom link here]
 
