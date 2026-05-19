@@ -71,4 +71,46 @@ class ScamAnalyzerTest {
         )
         assertEquals(RiskLevel.DANGEROUS, result.riskLevel)
     }
+
+    @Test
+    fun `shortenedUrl_returnsDangerous`() {
+        val result = analyzer.analyze(
+            "Claim your prize immediately via this link: bit.ly/reward"
+        )
+        assertEquals(RiskLevel.DANGEROUS, result.riskLevel)
+    }
+
+    @Test
+    fun `bankPlusUrgency_returnsDangerous`() {
+        val result = analyzer.analyze(
+            "WARNING: Your bank account has been frozen. Act now to restore access immediately!"
+        )
+        assertEquals(RiskLevel.DANGEROUS, result.riskLevel)
+    }
+
+    @Test
+    fun `normalBankMessage_returnsSafe`() {
+        val result = analyzer.analyze(
+            "Your monthly bank statement is now available in the app."
+        )
+        assertEquals(RiskLevel.SAFE, result.riskLevel)
+    }
+
+    @Test
+    fun `mixedCaseKeywords_detectedCorrectly`() {
+        val result = analyzer.analyze(
+            "URGENT: VERIFY your ACCOUNT and send PASSWORD to WIRE TRANSFER now"
+        )
+        assertEquals(RiskLevel.DANGEROUS, result.riskLevel)
+    }
+
+    @Test
+    fun `multipleUrls_increaseRisk`() {
+        val singleUrl = analyzer.analyze("Check out this offer: bit.ly/deal")
+        val multiUrl = analyzer.analyze("Check out bit.ly/deal1 and also tinyurl.com/offer2")
+        assertTrue(
+            "Multiple URLs should produce a higher confidence score than a single URL",
+            multiUrl.confidenceScore > singleUrl.confidenceScore
+        )
+    }
 }
