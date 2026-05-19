@@ -406,7 +406,7 @@ The screenshots below show actual Claude Code terminal sessions from the develop
 
 ## 14. Demo Video
 
-[Insert YouTube / Loom link here]
+[Watch on YouTube](https://www.youtube.com/watch?v=qJ1ZU-eTKFo)
 
 ---
 
