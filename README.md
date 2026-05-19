@@ -400,7 +400,7 @@ The screenshots below show actual Claude Code terminal sessions from the develop
 
 ---
 
-## 14. Author
+## 15. Author
 
 **Name:** Aleksandr Kross
 **Email:** krossale@fel.cvut.cz
